@@ -1,0 +1,28 @@
+{
+  "name": "coinnect-api",
+  "version": "1.0.0",
+  "description": "Coinnect API",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "aws4": "1.12.0",
+    "axios": "1.6.2",
+    "connect-mongo": "^5.1.0",
+    "dayjs": "1.11.10",
+    "email-providers": "^2.0.1",
+    "email-validator": "^2.0.4",
+    "express": "^4.18.2",
+    "generate-password": "^1.7.1",
+    "helmet": "7.1.0",
+    "is-my-ip-valid": "^1.0.1",
+    "is-valid-domain": "^0.1.6",
+    "mongoose": "8.0.3",
+    "passport": "^0.7.0",
+    "passport-headerapikey": "^1.2.2"
+  },
+  "devDependencies": {
+    "standard": "17.1.0"
+  }
+}
