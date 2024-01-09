@@ -6,6 +6,13 @@ We love your input! We want to make contributing to this project as easy and tra
 - Submitting a fix
 - Proposing new features
 
+## Proposing new features
+We highly value your contributions to this project. If you have innovative ideas for enhancing the capabilities of our cybersecurity assistant, we encourage you to get involved. You can contribute in the following ways:
+
+- Adding New Features: You can contribute by adding new functionalities to our existing controllers. Feel free to explore the codebase and suggest new features that can improve the assistant's performance.
+- Creating New Controllers: If you have specific ideas that require entirely new functionalities or unique characteristics, consider creating new controllers within the project. These controllers can bring diverse capabilities to the assistant.
+- `open_api_schema.json`: Whenever you add new features or controllers, make sure to update the `open_api_schema.json` file to reflect the changes accurately. This file serves as the reference for the assistant's API schema.
+
 ## We Develop with Github
 We use github to host code, to track issues and feature requests, as well as accept pull requests.
 

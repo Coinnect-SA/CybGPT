@@ -1,0 +1,594 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cybersecurity API",
+    "version": "1.0.0",
+    "description": "An API for performing various tasks related to cybersecurity for a company or individual."
+  },
+  "servers": [],
+  "paths": {
+    "/checkEmailCredentials/{email}": {
+      "get": {
+        "description": "Request a check on a email address for stolen credential. A operation code will be sent on the user email to start the scansion.",
+        "summary": "Request a check on a email address for stolen credential",
+        "operationId": "checkEmailCredentials",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "The user must insert a email address. The email must be a valid email address. A operation code will be sent on this email.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "user@example.com"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A operation code will be sent on the email address provided."
+          },
+          "400": {
+            "description": "The email must be a valid email address."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/doOperation/{operationCode}": {
+      "get": {
+        "description": "When the user provides the operation code he received by email, the system will start the operation and return the result. The result depends on the operation type he requested previously.",
+        "summary": "Start the operation requested by the user.",
+        "operationId": "doOperation",
+        "parameters": [
+          {
+            "name": "operationCode",
+            "in": "path",
+            "required": true,
+            "description": "The operation code to start the operation. The code is always a string of 6 characters.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "123abc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/rawPagesResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/checkEmailCredentialsResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/scanCompanyResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The operation code is not valid."
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/getBusinessImpact/{email}": {
+      "get": {
+        "description": "Request to write the business impact on a company if it is attacked by a cyber attack. A operation code will be sent on the user email to start the scansion.",
+        "summary": "Request to write the business impact on a company if it is attacked by a cyber attack.",
+        "operationId": "getBusinessImpact",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "The user email address. The domain is used to get the company domain. The email must be valid and a business email address, not gmail, outlook or other generic email providers. A operation code will be sent on this email.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "user@example.com"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "operationResult": {
+                      "type": "string",
+                      "description": "A description for the user about the operation result. Inform the user about the result."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The email must be a valid email address. The email must be a business email address, not gmail, outlook or other generic email providers."
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/getIP/{ip}": {
+      "get": {
+        "description": "Performs a scan of the given IP address. The result is a list of findings and technologies found on the IP address.",
+        "summary": "Scans the IP address",
+        "operationId": "scanIP",
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "path",
+            "required": true,
+            "description": "The IP address to scan",
+            "schema": {
+              "type": "string"
+            },
+            "example": "8.8.8.8"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful scan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ip_address": {
+                      "type": "string",
+                      "description": "The IP address that was scanned."
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "The unix timestamp when the ip was first scanned."
+                    },
+                    "updated": {
+                      "type": "number",
+                      "description": "The unix timestamp when the ip was last updated."
+                    },
+                    "cloud": {
+                      "type": "string",
+                      "description": "If present, it states that this is an ip adress belonging to a clound and who is the provider."
+                    },
+                    "score_data": {
+                      "type": "object",
+                      "properties": {
+                        "final_ip_score": {
+                          "type": "number",
+                          "description": "The risk score associated to the IP, from 0 to 100, where 100 is the highest risk."
+                        },
+                        "normalized_ip_score_detailed": {
+                          "type": "object",
+                          "properties": {
+                            "storage": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to storage, from 0 to 100, where 100 is the highest risk."
+                            },
+                            "rms": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to remote management, from 0 to 100, where 100 is the highest risk."
+                            },
+                            "cve": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to vulnerabilities, from 0 to 100, where 100 is the highest risk."
+                            },
+                            "encryption": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to encryption, from 0 to 100, where 100 is the highest risk."
+                            },
+                            "attack_surface": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to the attack surface, from 0 to 100, where 100 is the highest risk."
+                            },
+                            "web": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to web technologies, from 0 to 100, where 100 is the highest risk."
+                            },
+                            "critical_cve": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to critical vulnerabilities, from 0 to 100, where 100 is the highest risk."
+                            },
+                            "panels": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to administratoive and access panels, from 0 to 100, where 100 is the highest risk."
+                            }
+                          }
+                        },
+                        "ip_score_detailed": {
+                          "type": "object",
+                          "properties": {
+                            "storage": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to storage, the higher the number, the higher the risk."
+                            },
+                            "rms": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to remote management, the higher the number, the higher the risk."
+                            },
+                            "cve": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to vulnerabilities, the higher the number, the higher the risk."
+                            },
+                            "encryption": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to encryption, the higher the number, the higher the risk."
+                            },
+                            "attack_surface": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to the attack surface, the higher the number, the higher the risk."
+                            },
+                            "web": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to web technologies, the higher the number, the higher the risk."
+                            },
+                            "critical_cve": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to critical vulnerabilities, the higher the number, the higher the risk."
+                            },
+                            "panels": {
+                              "type": "number",
+                              "description": "The risk score associated to the IP and related to administratoive and access panels, the higher the number, the higher the risk."
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "geo_ip": {
+                      "type": "object",
+                      "properties": {
+                        "country_name": {
+                          "type": "string",
+                          "description": "The name of the country the IP is from."
+                        },
+                        "latitude": {
+                          "type": "number",
+                          "description": "The latitude coordinated of where the IP adress is located."
+                        },
+                        "longitude": {
+                          "type": "number",
+                          "description": "The longitude coordinated of where the IP adress is located."
+                        }
+                      }
+                    },
+                    "findings": {
+                      "type": "object",
+                      "properties": {
+                        "port": {
+                          "type": "number",
+                          "description": "The port on the IP address."
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "The brief description of the finding."
+                        },
+                        "risk": {
+                          "type": "string",
+                          "description": "A description of the cybersecurity risk of the finding."
+                        },
+                        "recommendation": {
+                          "type": "array",
+                          "description": "A list of reccomendations to mitigate or resolve the finding.",
+                          "items": {
+                            "type": "string",
+                            "description": "A single recommendation to mitigate and resolve the finding."
+                          }
+                        },
+                        "level": {
+                          "type": "string",
+                          "description": "The risk level experessed in textual form, possible levels are: LOW, MODERATE, HIGH, CRITICAL"
+                        },
+                        "risk_score": {
+                          "type": "number",
+                          "description": "The risk level expressed in a numerical value from 0 lowest to 10 highest."
+                        },
+                        "epss": {
+                          "type": "number",
+                          "description": "If present, it indicates the likelihood of a vulnerability to be exploited from 0 to 100, where 100 is the most likely to be exploited."
+                        }
+                      }
+                    },
+                    "techs": {
+                      "type": "object",
+                      "properties": {
+                        "port": {
+                          "type": "number",
+                          "description": "The port on the IP address where the technology was found."
+                        },
+                        "tech_name": {
+                          "type": "string",
+                          "description": "The name of the technology or product found."
+                        },
+                        "version": {
+                          "type": "string",
+                          "description": "The version of the technology or product found."
+                        },
+                        "cves": {
+                          "type": "array",
+                          "description": "A list of vulnerabilities associated with the technology.",
+                          "items": {
+                            "type": "string",
+                            "description": "The vulnerability code as defined in the CVE (Common Vulnerabilities and Exposures) framework."
+                          }
+                        },
+                        "category": {
+                          "type": "array",
+                          "description": "A list of categories belonging to the technology.",
+                          "items": {
+                            "type": "string",
+                            "description": "The category name."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/getRansomwareStats": {
+      "get": {
+        "description": "Get number of attacked companies by double extortion ransomware attacks. The data may be filtered by ransomware groups, date range and company sector, country code, revenue, number of employees. All the parameters are optional. Inform the user that he can insert only a subset of the parameters",
+        "summary": "Get number of attacked companies",
+        "operationId": "getRansomwareStats",
+        "parameters": [
+          {
+            "name": "naicsCode",
+            "in": "query",
+            "description": "The sector of the company. If not provided, the statistics will be for the whole sectors. Traslate the user input in a valid NAICS code.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "countryCode",
+            "in": "query",
+            "description": "The country code of the country to get ransomware statistics for. If not provided, the statistics will be for the whole world.If provided trasform the country in its country code.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "revenue",
+            "in": "query",
+            "description": "The revenue of the country in USD. If not provided, the statistics will be for the whole revenues.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "employees",
+            "in": "query",
+            "description": "The number of employees of the company. If not provided, the statistics will be for the whole number of employees.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ransomwareGroup",
+            "in": "query",
+            "description": "The name of the ransomware group. If not provided, the statistics will be for the whole ransomware groups.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "The start date of the period of interest. If not provided, the statistics will be from the beginning.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "The end date of the period of interest. If not provided, the statistics will be until today.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful scan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "attackedCompanies": {
+                      "type": "number",
+                      "description": "Number of attacked companies"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/scanCompany": {
+      "get": {
+        "description": "Request a scan on the company external surface searching for issues and vulnarabilieties. A operation code will be sent on the user email to start the scansion.",
+        "summary": "Request a scan on the company external surface searching for issues and vulnarabilieties.",
+        "operationId": "scanCompany",
+        "parameters": [
+          {
+            "name": "userEmail",
+            "in": "query",
+            "required": true,
+            "description": "The user must insert a email address. The email must be valid and a business email address, not gmail, outlook or other generic email providers. A operation code will be sent on this email.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": true,
+            "description": "The user must insert the language for the report. Trasform the language in ISO 639-1.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "operationResult": {
+                      "type": "string",
+                      "description": "A description for the user about the operation result. Inform the user about the result."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "rawPagesResponse": {
+        "type": "object",
+        "properties": {
+          "rawPages": {
+            "type": "string",
+            "description": "A raw text extracted from company website where find information to write the business impact."
+          }
+        }
+      },
+      "checkEmailCredentialsResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "The email address for the stolen credential."
+            },
+            "username": {
+              "type": "string",
+              "description": "The username for the stolen credential."
+            },
+            "passwordHidden": {
+              "type": "string",
+              "description": "The password the stolen credential. Only the first and the last charachter is visible."
+            },
+            "source": {
+              "type": "string",
+              "description": "The name of the catalog where the credential was found. "
+            },
+            "publish_date": {
+              "type": "string",
+              "description": "The date when the credential was found."
+            },
+            "nationIdHidden": {
+              "type": "string",
+              "description": "The stolen number of a persons national ID card. Only the last 3 characters are visible"
+            },
+            "passportNumberHidden": {
+              "type": "string",
+              "description": "The stolen number of a persons passport. Only the last 3 characters are visible"
+            },
+            "phoneHidden": {
+              "type": "string",
+              "description": "The stolen phone number of a person. Only the last 3 characters are visible"
+            },
+            "cc_expiration": {
+              "type": "string",
+              "description": "The stolen expiration date of a persons credit card."
+            },
+            "ccNumberHidden": {
+              "type": "number",
+              "description": "The stolen number of a persons credit card. Only the last 3 characters are visible"
+            },
+            "infected_machine_id": {
+              "type": "string",
+              "description": "The id of the machine that was infected."
+            },
+            "infected_time": {
+              "type": "string",
+              "description": "The time when the machine became infected."
+            },
+            "target_url": {
+              "type": "string",
+              "description": "The url that the user visited when the credentials were stolen."
+            },
+            "user_os": {
+              "type": "string",
+              "description": "The operating system of the user infected machine."
+            }
+          }
+        }
+      },
+      "scanCompanyResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string",
+            "description": "Information to the user about the result of the operation."
+          }
+        }
+      }
+    }
+  }
+}
