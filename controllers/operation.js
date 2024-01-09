@@ -4,6 +4,11 @@ const config = require('../config/config.js')
 const utility = require('../utility/utility.js')
 const { CybOperation } = require('../models/mongodb')
 
+/**
+ * Retrieve the operation from the database and call internal server to execute it. Then set the operation as done.
+ * @param {string} operationCode - The operation code.
+ */
+
 exports.doOperation = async function (req, res) {
   const operationCode = req.params.operationCode
 

@@ -9,6 +9,10 @@ const emailProviders = new Set(require('email-providers/all.json'))
 const config = require('../config/config.js')
 const utility = require('../utility/utility.js')
 
+/**
+ * Create a new operation to get the raw pages of the email domain and send the operation code to the user.
+ * @param {string} email - The email address to extrract the domain from.
+ */
 exports.getRawPages = async function (req, res) {
   const email = req.params.email
 
@@ -34,6 +38,10 @@ exports.getRawPages = async function (req, res) {
   }
 }
 
+/**
+ * Start the scansion of an ip address and return the result.
+ * @param {string} ip - The ip address to scan.
+ */
 exports.scanIP = async function (req, res) {
   const ip = req.params.ip
 
@@ -60,26 +68,11 @@ exports.scanIP = async function (req, res) {
   }
 }
 
-exports.checkEmailCredentials = async function (req, res) {
-  const email = req.params.email
-
-  console.log('Check email credentials of ' + email)
-
-  if (isValidEmail.validate(email)) {
-    const operationCode = utility.getOperationCode()
-
-    await utility.sendEmail(email, operationCode)
-
-    await utility.createOperation(operationCode, 'checkEmailCredentials', {
-      email
-    })
-
-    return res.sendStatus(200)
-  } else {
-    res.sendStatus(400)
-  }
-}
-
+/**
+ * Create an operation to scan a company external surface and send the operation code to the user.
+ * @param {string} userEmail - The email address of the user.
+ * @param {string} language - The language of the report.
+ */
 exports.scanCompany = async function (req, res) {
   const userEmail = req.query.userEmail
   const language = req.query.language

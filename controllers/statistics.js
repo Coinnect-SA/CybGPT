@@ -5,6 +5,16 @@ dayjs.extend(customParseFormat)
 
 const config = require('../config/config.js')
 
+/**
+ * Get number of companies attacked by ransomware based on the parameters
+ * @param {string} countryCode - The country code to filter.
+ * @param {number} revenue - The revenue to filter.
+ * @param {number} employees - The number of employees to filter.
+ * @param {string} ransomwareGroup - The ransomware group to filter.
+ * @param {string} startDate - The start date to filter.
+ * @param {string} endDate - The end date to filter.
+ * @param {string} naicsCode - The naics code to filter.
+ */
 exports.getRansomwareStats = async function (req, res) {
   const countryCode = req.query.countryCode
   const revenue = req.query.revenue
@@ -25,10 +35,8 @@ exports.getRansomwareStats = async function (req, res) {
     validationParameters = false
   } else if (employees && (isNaN(employees) || parseInt(employees) < 0)) {
     validationParameters = false
-    // } else if (startDate && isNaN(Date.parse(startDate))) {
   } else if (startDate && !dayjs(startDate, 'YYYY-MM-DD', true).isValid()) {
     validationParameters = false
-    // } else if (endDate && isNaN(Date.parse(endDate))) {
   } else if (endDate && !dayjs(endDate, 'YYYY-MM-DD', true).isValid()) {
     validationParameters = false
   } else if (naicsCode && (isNaN(naicsCode) || naicsCode.length < 2 || parseInt(naicsCode) < 0)) {
