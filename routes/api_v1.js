@@ -2,30 +2,33 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 
-const cybController = require('../controllers/cyb_controller')
+const credentialsController = require('../controllers/credentials_controller')
+const operationController = require('../controllers/operation_controller')
+const scanController = require('../controllers/scan_controller')
+const statisticsController = require('../controllers/statistics_controller')
 
 router.get('/getBusinessImpact/:email', passport.authenticate('headerapikey', {
   session: false
-}), cybController.getRawPages)
+}), scanController.getRawPages)
 
 router.get('/getIP/:ip', passport.authenticate('headerapikey', {
   session: false
-}), cybController.scanIP)
-
-router.get('/checkEmailCredentials/:email', passport.authenticate('headerapikey', {
-  session: false
-}), cybController.checkEmailCredentials)
-
-router.get('/getRansomwareStats', passport.authenticate('headerapikey', {
-  session: false
-}), cybController.getRansomwareStats)
+}), scanController.scanIP)
 
 router.get('/scanCompany', passport.authenticate('headerapikey', {
   session: false
-}), cybController.scanCompany)
+}), scanController.scanCompany)
+
+router.get('/checkEmailCredentials/:email', passport.authenticate('headerapikey', {
+  session: false
+}), credentialsController.checkEmailCredentials)
+
+router.get('/getRansomwareStats', passport.authenticate('headerapikey', {
+  session: false
+}), statisticsController.getRansomwareStats)
 
 router.get('/doOperation/:operationCode', passport.authenticate('headerapikey', {
   session: false
-}), cybController.doOperation)
+}), operationController.doOperation)
 
 module.exports = router

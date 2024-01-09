@@ -1,6 +1,6 @@
-# CybGPT API Interface
+# CybGPT API
 
-This project is the API interface for CybGPT, created by Coinnect SA. CybGPT is a powerful AI system designed for various cybersecurity tasks. With this API, CybGPT can interact with server to perform actions such as scanning, retrieving statistics, checking for exfiltrated credentials, and more.
+This project is the API for CybGPT, created by Coinnect SA. CybGPT is a powerful AI system designed for various cybersecurity tasks. With this API, CybGPT can interact with server to perform actions such as scanning, retrieving statistics, checking for exfiltrated credentials, and more.
 
 ## Installation
 
