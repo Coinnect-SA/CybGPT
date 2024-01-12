@@ -2,10 +2,10 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 
-const credentialsController = require('../controllers/credentials_controller')
-const operationController = require('../controllers/operation_controller')
-const scanController = require('../controllers/scan_controller')
-const statisticsController = require('../controllers/statistics_controller')
+const credentialsController = require('../controllers/credentials')
+const operationController = require('../controllers/operation')
+const scanController = require('../controllers/scan')
+const statisticsController = require('../controllers/statistics')
 
 router.get('/getBusinessImpact/:email', passport.authenticate('headerapikey', {
   session: false
