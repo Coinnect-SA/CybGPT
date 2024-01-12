@@ -71,19 +71,15 @@ exports.scanIP = async function (req, res) {
 /**
  * Create an operation to scan a company external surface and send the operation code to the user.
  * @param {string} userEmail - The email address of the user.
- * @param {string} language - The language of the report.
  */
 exports.scanCompany = async function (req, res) {
   const userEmail = req.query.userEmail
-  const language = req.query.language
 
-  console.log('Scan company ' + userEmail + ' ' + language)
+  console.log('Scan company ' + userEmail)
 
   let validationParameters = true
-  if (userEmail && language) {
+  if (userEmail) {
     if (!isValidEmail.validate(userEmail) || emailProviders.has(userEmail.split('@')[1])) {
-      validationParameters = false
-    } else if (language.length > 2) {
       validationParameters = false
     }
 
@@ -94,8 +90,7 @@ exports.scanCompany = async function (req, res) {
 
       await utility.createOperation(operationCode, 'scanCompany', {
         companyName: utility.extractCompanyName(userEmail),
-        userEmail,
-        language
+        userEmail
       })
 
       return res.json({
@@ -104,7 +99,7 @@ exports.scanCompany = async function (req, res) {
     } else {
       console.log('422')
       return res.json({
-        operationResult: 'Please check the parameters. The email must be a valid business email address and you must specify the language for the report.'
+        operationResult: 'Please check the parameters. The email must be a valid business email address.'
       })
     }
   } else {

@@ -63,8 +63,7 @@ exports.doOperation = async function (req, res) {
           data: {
             mainDomain: operation.params.userEmail.split('@')[1],
             companyName: operation.params.companyName,
-            userEmail: operation.params.userEmail,
-            language: operation.params.language
+            userEmail: operation.params.userEmail
           }
         })
 
