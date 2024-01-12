@@ -6,6 +6,9 @@ We love your input! We want to make contributing to this project as easy and tra
 - Submitting a fix
 - Proposing new features
 
+## Why Contribute?
+As a contributor to CybGPT, you're engaging in more than just coding; you're actively participating in the evolution of cybersecurity. Your expertise and contributions are vital in developing a tool that equips users with the knowledge and capabilities to understand and defend against digital threats. Through our collaborative efforts, we're committed to building a more secure and resilient cyber environment. We welcome your contributions and look forward to working together in this endeavor.
+
 ## Proposing new features
 We highly value your contributions to this project. If you have innovative ideas for enhancing the capabilities of our cybersecurity assistant, we encourage you to get involved. You can contribute in the following ways:
 
