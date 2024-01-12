@@ -464,15 +464,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "language",
-            "in": "query",
-            "required": true,
-            "description": "The user must insert the language for the report. Trasform the language in ISO 639-1.",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
