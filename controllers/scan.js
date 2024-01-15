@@ -60,7 +60,7 @@ exports.scanIP = async function (req, res) {
 
       res.json(response.data)
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
       res.sendStatus(500)
     }
   } else {
