@@ -1,9 +1,9 @@
-const axios = require('axios');
-const dayjs = require('dayjs');
-const customParseFormat = require('dayjs/plugin/customParseFormat');
-dayjs.extend(customParseFormat);
+const axios = require('axios')
+const dayjs = require('dayjs')
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
 
-const config = require('../config/config.js');
+const config = require('../config/config.js')
 
 /**
  * Get number of companies attacked by ransomware based on the parameters
@@ -24,7 +24,7 @@ const config = require('../config/config.js');
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
  */
-function validateRequestParams(req, res, next) {
+function validateRequestParams (req, res, next) {
   const {
     countryCode,
     revenue,
@@ -32,8 +32,8 @@ function validateRequestParams(req, res, next) {
     ransomwareGroup,
     startDate,
     endDate,
-    naicsCode,
-  } = req.query;
+    naicsCode
+  } = req.query
 
   if (
     (countryCode && countryCode.length > 2) ||
@@ -42,15 +42,14 @@ function validateRequestParams(req, res, next) {
     (employees && (isNaN(employees) || parseInt(employees) < 0)) ||
     (startDate && !dayjs(startDate, 'YYYY-MM-DD', true).isValid()) ||
     (endDate && !dayjs(endDate, 'YYYY-MM-DD', true).isValid()) ||
-    (naicsCode &&
-      (isNaN(naicsCode) || naicsCode.length < 2 || parseInt(naicsCode) < 0))
+    (naicsCode && (isNaN(naicsCode) || naicsCode.length < 2 || parseInt(naicsCode) < 0))
   ) {
-    return res.status(400).json({ error: 'Invalid request parameters.' });
+    return res.status(400).json({ error: 'Invalid request parameters.' })
   }
 
   // If naicsCode is provided, extract the first two characters
-  req.correctNaicsCode = naicsCode ? naicsCode.substring(0, 2) : undefined;
-  next();
+  req.correctNaicsCode = naicsCode ? naicsCode.substring(0, 2) : undefined
+  next()
 }
 
 /**
@@ -69,8 +68,8 @@ exports.getRansomwareStats = async function (req, res) {
     ransomwareGroup,
     startDate,
     endDate,
-    correctNaicsCode,
-  } = req.query;
+    correctNaicsCode
+  } = req.query
 
   try {
     const response = await axios.post(`${config.ip_feed}/cyb/getRansomwareStats`, {
@@ -80,22 +79,22 @@ exports.getRansomwareStats = async function (req, res) {
       ransomwareGroup,
       startDate,
       endDate,
-      naicsCode: correctNaicsCode,
+      naicsCode: correctNaicsCode
     }, {
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    });
+        Accept: 'application/json'
+      }
+    })
 
     // Respond with the fetched data
-    return res.json(response.data);
+    return res.json(response.data)
   } catch (error) {
     // Log the error and respond with a 500 status in case of an error
-    console.error(error);
-    return res.sendStatus(500);
+    console.error(error)
+    return res.sendStatus(500)
   }
-};
+}
 
 // Use the validation middleware for the route
-exports.getRansomwareStats = [validateRequestParams, exports.getRansomwareStats];
+exports.getRansomwareStats = [validateRequestParams, exports.getRansomwareStats]
