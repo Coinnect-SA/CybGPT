@@ -4,6 +4,7 @@ const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 
 const config = require('../config/config.js')
+const utility = require('../utility/utility.js')
 
 /**
  * Get number of companies attacked by ransomware based on the parameters
@@ -34,6 +35,16 @@ function validateRequestParams (req, res, next) {
     endDate,
     naicsCode
   } = req.query
+
+  utility.createLog('createOperation', 'getRansomwareStats', {
+    countryCode,
+    revenue,
+    employees,
+    ransomwareGroup,
+    startDate,
+    endDate,
+    naicsCode
+  })
 
   if (
     (countryCode && countryCode.length > 2) ||

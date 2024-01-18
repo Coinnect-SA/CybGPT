@@ -18,6 +18,10 @@ exports.getRawPages = async function (req, res) {
 
   console.log('Get raw pages of ' + email)
 
+  utility.createLog('createOperation', 'businessImpact', {
+    email
+  })
+
   if (isValidEmail.validate(email) && !emailProviders.has(email.split('@')[1])) {
     const operationCode = utility.getOperationCode()
 
@@ -46,6 +50,10 @@ exports.scanIP = async function (req, res) {
   const ip = req.params.ip
 
   console.log('Scan IP ' + ip)
+
+  utility.createLog('createOperation', 'scanIP', {
+    ip
+  })
 
   if (isValidIP(ip)) {
     try {
@@ -76,6 +84,10 @@ exports.scanCompany = async function (req, res) {
   const userEmail = req.query.userEmail
 
   console.log('Scan company ' + userEmail)
+
+  utility.createLog('createOperation', 'scanCompany', {
+    email: userEmail
+  })
 
   let validationParameters = true
   if (userEmail) {

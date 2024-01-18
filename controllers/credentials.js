@@ -12,6 +12,10 @@ exports.checkEmailCredentials = async function (req, res) {
 
   console.log('Check email credentials of ' + email)
 
+  utility.createLog('createOperation', 'checkEmailCredentials', {
+    email
+  })
+
   if (isValidEmail.validate(email)) {
     const operationCode = utility.getOperationCode()
 
@@ -23,6 +27,6 @@ exports.checkEmailCredentials = async function (req, res) {
 
     return res.sendStatus(200)
   } else {
-    res.sendStatus(400)
+    return res.sendStatus(400)
   }
 }
