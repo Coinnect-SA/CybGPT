@@ -89,13 +89,8 @@ exports.scanCompany = async function (req, res) {
     email: userEmail
   })
 
-  let validationParameters = true
   if (userEmail) {
-    if (!isValidEmail.validate(userEmail) || emailProviders.has(userEmail.split('@')[1])) {
-      validationParameters = false
-    }
-
-    if (validationParameters) {
+    if (isValidEmail.validate(userEmail) && !emailProviders.has(userEmail.split('@')[1])) {
       const operationCode = utility.getOperationCode()
 
       await utility.sendEmail(userEmail, operationCode)
