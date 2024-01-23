@@ -14,7 +14,7 @@ const utility = require('../utility/utility.js')
  * @param {string} email - The email address to extrract the domain from.
  */
 exports.getRawPages = async function (req, res) {
-  const email = req.params.email
+  const email = req.params.email.toLowerCase()
 
   console.log('Get raw pages of ' + email)
 
@@ -81,7 +81,7 @@ exports.scanIP = async function (req, res) {
  * @param {string} userEmail - The email address of the user.
  */
 exports.scanCompany = async function (req, res) {
-  const userEmail = req.query.userEmail
+  const userEmail = req.query.userEmail.toLowerCase()
 
   console.log('Scan company ' + userEmail)
 

@@ -8,7 +8,7 @@ const utility = require('../utility/utility.js')
  */
 
 exports.checkEmailCredentials = async function (req, res) {
-  const email = req.params.email
+  const email = req.params.email.toLowerCase()
 
   console.log('Check email credentials of ' + email)
 
