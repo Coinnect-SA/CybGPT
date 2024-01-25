@@ -58,7 +58,7 @@ exports.communicatingFilesExample = async function communicatingFilesExample (do
   }
 
   const commFiles = []
-  for (const finding of response.data) {
+  for (const finding of response.data.data) {
     commFiles.push({
       name: finding.attributes?.meaningful_name,
       type: finding.attributes?.type_description,

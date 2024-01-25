@@ -8,9 +8,14 @@ exports.communicatingFilesExample = async function (req, res) {
   console.log('Communicating Files Example of ' + domain)
 
   if (isValidDomain(domain)) {
-    const response = await exampleProvider.communicatingFilesExample(domain)
+    try {
+      const response = await exampleProvider.communicatingFilesExample(domain)
 
-    return res.json(response)
+      return res.json(response)
+    } catch (error) {
+      console.log(error)
+      return res.sendStatus(500)
+    }
   } else {
     return res.sendStatus(400)
   }
