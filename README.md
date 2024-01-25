@@ -38,6 +38,15 @@ MongoDB: This project requires MongoDB to run.
   module.exports = config;
 ```
 
+- You must create a user in api_users collection on DB
+```json
+  {
+    "name": "Test",
+    "api_key": "Your_test_api_key"
+  }
+```
+Use your api-key in the custom header X-API-KEY when making API requests
+
 - npm install
 - npm start
 
