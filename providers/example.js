@@ -1,5 +1,5 @@
 const config = require('../config/config.js')
-const virustotalApiKey = process.env.VIRUSTOTAL_APY_KEY || config.virustotal_api_key
+const virustotalApiKey = config.virustotal_api_key
 const axios = require('axios')
 const dayjs = require('dayjs')
 const isValidDomain = require('is-valid-domain')
