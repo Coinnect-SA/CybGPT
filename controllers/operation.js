@@ -1,7 +1,6 @@
 const axios = require('axios')
 
 const config = require('../config/config.js')
-const utility = require('../utility/utility.js')
 const { CybOperation } = require('../models/mongodb')
 
 /**
@@ -24,21 +23,6 @@ exports.doOperation = async function (req, res) {
 
     try {
       switch (operation.type) {
-        case 'getRawPages':
-          console.log('getRawPages')
-          response = await axios({
-            url: `${config.ip_feed}/cyb/getRawPages/${operation.params.email.split('@')[1]}`,
-            method: 'get',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json'
-            }
-          })
-
-          response = {
-            rawPages: utility.cutString(response.data.rawPages)
-          }
-          break
         case 'checkEmailCredentials':
           console.log('checkEmailCredentials')
           response = await axios({

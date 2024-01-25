@@ -7,7 +7,7 @@ const operationController = require('../controllers/operation')
 const scanController = require('../controllers/scan')
 const statisticsController = require('../controllers/statistics')
 
-router.get('/getBusinessImpact/:email', passport.authenticate('headerapikey', {
+router.get('/getBusinessImpact/:domain', passport.authenticate('headerapikey', {
   session: false
 }), scanController.getRawPages)
 
