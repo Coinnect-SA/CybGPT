@@ -19,14 +19,6 @@ We highly value your contributions to this project. If you have innovative ideas
 ## We Develop with Github
 We use github to host code, to track issues and feature requests, as well as accept pull requests.
 
-## We Use [Github Flow](https://docs.github.com/en/get-started/quickstart/github-flow), So All Code Changes Happen Through Pull Requests
-Pull requests are the best way to propose changes to the codebase (we use [Github Flow](https://docs.github.com/en/get-started/quickstart/github-flow)). We actively welcome your pull requests:
-
-1. Fork the repo and create your branch from `main`.
-2. Make your code changes and/or new functions
-2. Make sure your code lints.
-3. Issue that pull request!
-
 ## Report bugs using Github's [issues](https://github.com/Coinnect-SA/CybGPT/issues)
 We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/Coinnect-SA/CybGPT/issues/new).
 
