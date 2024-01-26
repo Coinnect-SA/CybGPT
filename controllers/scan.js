@@ -1,5 +1,4 @@
 const axios = require('axios')
-const isValidIP = require('is-my-ip-valid')()
 const isValidEmail = require('email-validator')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
@@ -10,6 +9,7 @@ const isValidDomain = require('is-valid-domain')
 
 const config = require('../config/config.js')
 const utility = require('../utility/utility.js')
+const { IpAddressType } = require('../types/zodTypes.js')
 
 /**
  * Begin the process of reading the specified domain's website to gather information about the company.
@@ -52,7 +52,14 @@ exports.getRawPages = async function (req, res) {
  * @param {string} ip - The ip address to scan.
  */
 exports.scanIP = async function (req, res) {
-  const ip = req.params.ip
+  const paresedInput = IpAddressType.safeParse(req.params.ip)
+  if (!paresedInput) {
+    return res.status(400).json({
+      msg: 'Invalid Ip Address'
+    })
+  }
+
+  const ip = paresedInput.data.ip
 
   console.log('Scan IP ' + ip)
 
@@ -60,24 +67,20 @@ exports.scanIP = async function (req, res) {
     ip
   })
 
-  if (isValidIP(ip)) {
-    try {
-      const response = await axios({
-        url: `${config.ip_feed}/cyb/scanIP/${ip}`,
-        method: 'get',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        }
-      })
+  try {
+    const response = await axios({
+      url: `${config.ip_feed}/cyb/scanIP/${ip}`,
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    })
 
-      res.json(response.data)
-    } catch (error) {
-      console.log(error.message)
-      res.sendStatus(500)
-    }
-  } else {
-    res.sendStatus(400)
+    res.json(response.data)
+  } catch (error) {
+    console.log(error.message)
+    res.sendStatus(500)
   }
 }
 
