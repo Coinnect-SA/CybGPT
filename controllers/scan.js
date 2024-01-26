@@ -10,6 +10,7 @@ const isValidDomain = require('is-valid-domain')
 
 const config = require('../config/config.js')
 const utility = require('../utility/utility.js')
+const { IpAddressType } = require('../types/zodTypes.js')
 
 /**
  * Begin the process of reading the specified domain's website to gather information about the company.
@@ -52,7 +53,15 @@ exports.getRawPages = async function (req, res) {
  * @param {string} ip - The ip address to scan.
  */
 exports.scanIP = async function (req, res) {
-  const ip = req.params.ip
+
+  const paresedInput = IpAddressType.safeParse(req.params.ip);
+  if (!paresedInput) {
+    return res.status(400).json({
+      msg: "Invalid Ip Address"
+    })
+  }
+
+  const ip = paresedInput.data.ip;
 
   console.log('Scan IP ' + ip)
 

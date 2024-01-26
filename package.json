@@ -7,6 +7,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@types/ip-address": "^7.0.0",
     "aws4": "1.12.0",
     "axios": "1.6.2",
     "connect-mongo": "^5.1.0",
@@ -17,6 +18,7 @@
     "extract-domain": "^4.1.5",
     "generate-password": "^1.7.1",
     "helmet": "7.1.0",
+    "ip-address": "^9.0.5",
     "is-my-ip-valid": "^1.0.1",
     "is-valid-domain": "^0.1.6",
     "mongoose": "8.0.3",
