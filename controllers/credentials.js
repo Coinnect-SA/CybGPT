@@ -13,7 +13,7 @@ exports.checkEmailCredentials = async function (req, res) {
       msg: 'email type is not valid'
     })
   }
-  const email = paresedInput.data.email;
+  const email = paresedInput.data.email
 
   console.log('Check email credentials of ' + email)
 

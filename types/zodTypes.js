@@ -5,7 +5,7 @@ const EmailType = z.object({
 })
 
 const IpAddressType = z.object({
-  ip: z.string().ip({ message: "Invalid IP address" }),
+  ip: z.string().ip({ message: 'Invalid IP address' })
 })
 
 module.exports = { EmailType, IpAddressType }
