@@ -4,6 +4,7 @@ module.exports = (mongoose) => {
     operation: String,
     createdAt: Date,
     params: {
+      domain: String,
       email: String,
       ip: String,
       countryCode: String,

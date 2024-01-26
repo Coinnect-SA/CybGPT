@@ -7,7 +7,7 @@ const operationController = require('../controllers/operation')
 const scanController = require('../controllers/scan')
 const statisticsController = require('../controllers/statistics')
 
-router.get('/getBusinessImpact/:email', passport.authenticate('headerapikey', {
+router.get('/getBusinessImpact/:domain', passport.authenticate('headerapikey', {
   session: false
 }), scanController.getRawPages)
 
@@ -30,5 +30,12 @@ router.get('/getRansomwareStats', passport.authenticate('headerapikey', {
 router.get('/doOperation/:operationCode', passport.authenticate('headerapikey', {
   session: false
 }), operationController.doOperation)
+
+// Example function
+const exampleController = require('../controllers/example')
+
+router.get('/communicatingFilesExample/:domain', passport.authenticate('headerapikey', {
+  session: false
+}), exampleController.communicatingFilesExample)
 
 module.exports = router

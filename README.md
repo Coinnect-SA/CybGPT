@@ -38,8 +38,26 @@ MongoDB: This project requires MongoDB to run.
   module.exports = config;
 ```
 
+- You must create a user in api_users collection on DB
+```json
+  {
+    "name": "Test",
+    "api_key": "Your_test_api_key"
+  }
+```
+Use your api-key in the custom header X-API-KEY when making API requests
+
 - npm install
 - npm start
+
+## Example function
+To use the sample function in the config.js file, a valid [VirusTotal](https://www.virustotal.com/) key must be added. 
+```json
+  {
+    "virustotal_api_key": "Your API key"
+  }
+```
+The function can be invoked by making a GET request to the local address /api/v1/communicatingFilesExample/example.com
 
 ## Contributing
 

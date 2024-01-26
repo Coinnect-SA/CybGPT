@@ -5,40 +5,45 @@ const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 const emailProviders = new Set(require('email-providers/all.json'))
+const extractDomain = require('extract-domain')
+const isValidDomain = require('is-valid-domain')
 
 const config = require('../config/config.js')
 const utility = require('../utility/utility.js')
 
 /**
- * Create a new operation to get the raw pages of the email domain and send the operation code to the user.
- * @param {string} email - The email address to extrract the domain from.
+ * Begin the process of reading the specified domain's website to gather information about the company.
+ * @param {string} domain - The website domain to gather information.
  */
 exports.getRawPages = async function (req, res) {
-  const email = req.params.email
+  const domain = await extractDomain(req.params.domain.toLowerCase(), { tld: true })
 
-  console.log('Get raw pages of ' + email)
+  console.log('Get raw pages of ' + domain)
 
   utility.createLog('createOperation', 'businessImpact', {
-    email
+    domain
   })
 
-  if (isValidEmail.validate(email) && !emailProviders.has(email.split('@')[1])) {
-    const operationCode = utility.getOperationCode()
+  if (isValidDomain(domain)) {
+    try {
+      const response = await axios({
+        url: `${config.ip_feed}/cyb/getRawPages/${domain}`,
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        }
+      })
 
-    await utility.sendEmail(email, operationCode)
-
-    await utility.createOperation(operationCode, 'getRawPages', {
-      email
-    })
-
-    return res.json({
-      operationResult: 'The request has been sent. Please check your email for the operation code to insert in the chat.'
-    })
+      return res.json({
+        rawPages: utility.cutString(response.data.rawPages)
+      })
+    } catch (error) {
+      console.log(error.message)
+      res.sendStatus(500)
+    }
   } else {
-    console.log('422')
-    return res.json({
-      operationResult: 'Please check the parameters. The email must be a valid business email address.'
-    })
+    res.sendStatus(400)
   }
 }
 
@@ -81,7 +86,7 @@ exports.scanIP = async function (req, res) {
  * @param {string} userEmail - The email address of the user.
  */
 exports.scanCompany = async function (req, res) {
-  const userEmail = req.query.userEmail
+  const userEmail = req.query.userEmail.toLowerCase()
 
   console.log('Scan company ' + userEmail)
 
@@ -89,13 +94,8 @@ exports.scanCompany = async function (req, res) {
     email: userEmail
   })
 
-  let validationParameters = true
   if (userEmail) {
-    if (!isValidEmail.validate(userEmail) || emailProviders.has(userEmail.split('@')[1])) {
-      validationParameters = false
-    }
-
-    if (validationParameters) {
+    if (isValidEmail.validate(userEmail) && !emailProviders.has(userEmail.split('@')[1])) {
       const operationCode = utility.getOperationCode()
 
       await utility.sendEmail(userEmail, operationCode)

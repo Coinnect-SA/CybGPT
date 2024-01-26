@@ -14,6 +14,7 @@
     "email-providers": "^2.0.1",
     "email-validator": "^2.0.4",
     "express": "^4.18.2",
+    "extract-domain": "^4.1.5",
     "generate-password": "^1.7.1",
     "helmet": "7.1.0",
     "is-my-ip-valid": "^1.0.1",
@@ -25,5 +26,8 @@
   },
   "devDependencies": {
     "standard": "17.1.0"
+  },
+  "optionalDependencies": {
+    "psl": "^1.9.0"
   }
 }

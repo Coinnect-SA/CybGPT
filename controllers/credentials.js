@@ -9,6 +9,7 @@ import { EmailType } from '../types/zodTypes.js'
  */
 
 exports.checkEmailCredentials = async function (req, res) {
+
   const paresedInput = EmailType.safeParse(req.params.email);
   if (!paresedInput) {
     return res.status(403).json({
@@ -16,6 +17,7 @@ exports.checkEmailCredentials = async function (req, res) {
     })
   }
   const email = paresedInput.data.email;
+
 
   console.log('Check email credentials of ' + email)
 
