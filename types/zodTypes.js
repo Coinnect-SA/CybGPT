@@ -8,4 +8,11 @@ const IpAddressType = z.object({
   ip: z.string().ip({ message: 'Invalid IP address' })
 })
 
-module.exports = { EmailType, IpAddressType }
+const DomainType = z.object({
+  domain: z.refine((data) => {
+    const domain_regex = /^((?!-)[A-Za-z0-9-]{1, 63}(?<!-)\\.)+[A-Za-z]{2, 6}$/;
+    return domain_regex.test(data);
+  })
+})
+
+module.exports = { EmailType, IpAddressType, DomainType }
