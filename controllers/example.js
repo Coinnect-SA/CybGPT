@@ -1,5 +1,4 @@
 const isValidDomain = require('is-valid-domain')
-
 const exampleProvider = require('../providers/example')
 
 exports.communicatingFilesExample = async function (req, res) {
