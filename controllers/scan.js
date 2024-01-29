@@ -69,14 +69,12 @@ exports.getRawPages = async function (req, res) {
  * @param {string} ip - The ip address to scan.
  */
 exports.scanIP = async function (req, res) {
-  const paresedInput = IpAddressType.safeParse(req.params.ip)
-  if (!paresedInput) {
-    return res.status(400).json({
-      msg: 'Invalid Ip Address'
-    })
+  const parsedInput = IpAddressType.safeParse(req.params.ip)
+  if (!parsedInput.success) {
+    return res.sendStatus(400)
   }
 
-  const ip = paresedInput.data.ip
+  const ip = parsedInput.data
 
   console.log('Scan IP ' + ip)
 
