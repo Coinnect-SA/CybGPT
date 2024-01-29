@@ -59,7 +59,8 @@ function validateRequestParams (req, res, next) {
   }
 
   // If naicsCode is provided, extract the first two characters
-  req.correctNaicsCode = naicsCode ? naicsCode.substring(0, 2) : undefined
+  req.query.correctNaicsCode = naicsCode ? naicsCode.substring(0, 2) : undefined
+
   next()
 }
 
