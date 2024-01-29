@@ -7,13 +7,12 @@ const utility = require('../utility/utility.js')
  */
 
 exports.checkEmailCredentials = async function (req, res) {
-  const paresedInput = EmailType.safeParse(req.params.email)
-  if (!paresedInput) {
-    return res.status(400).json({
-      msg: 'email type is not valid'
-    })
+  const parsedInput = EmailType.safeParse(req.params.email)
+  if (!parsedInput.success) {
+    return res.sendStatus(400)
   }
-  const email = paresedInput.data.email
+
+  const email = parsedInput.data
 
   console.log('Check email credentials of ' + email)
 
