@@ -1,27 +1,15 @@
 const axios = require('axios')
-const isValidIP = require('is-my-ip-valid')()
 const isValidEmail = require('email-validator')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 const emailProviders = new Set(require('email-providers/all.json'))
+const extractDomain = require('extract-domain')
+const isValidDomain = require('is-valid-domain')
 
 const config = require('../config/config.js')
 const utility = require('../utility/utility.js')
-
-/**
- * Handles the process of validating parameters for a user's email and language.
- * Checks if the email is valid, not from a restricted provider, and the language is within acceptable limits.
- * @param {string} userEmail - The email address to be validated.
- * @param {string} language - The language parameter to be validated.
- * @returns {boolean} isValid - A boolean indicating whether the parameters passed validation.
- */
-function validateParameters(userEmail, language) {
-  if (!isValidEmail.validate(userEmail) || emailProviders.has(userEmail.split('@')[1]) || language.length > 2) {
-    return false
-  }
-  return true
-}
+const { IpAddressType } = require('../types/zodTypes.js')
 
 /**
  * Handles the process of making an Axios request to a specified URL with the given method and headers,
@@ -32,7 +20,7 @@ function validateParameters(userEmail, language) {
  * @returns {Promise} Promise - A promise that resolves to the data returned from the Axios request.
  * @throws {Error} error - An error object thrown in case of an unsuccessful Axios request.
  */
-async function makeAxiosRequest(url, method, headers) {
+async function makeAxiosRequest (url, method, headers) {
   try {
     const response = await axios({ url, method, headers })
     return response.data
@@ -44,66 +32,20 @@ async function makeAxiosRequest(url, method, headers) {
 }
 
 /**
- * Handles the process of initiating a new operation for a user's email.
- * This function generates a unique operation code, sends it to the user via email, 
- * and creates an associated operation entry.
- * @param {string} userEmail - The email address for which the operation is being initiated.
- * @param {string} operationType - The type of operation to be created (e.g., 'getRawPages').
- * @param {string} [language=null] - An optional parameter for specifying language for localization.
- * @returns {string} operationCode - The generated operation code linked to the initiated operation.
- */
-async function handleEmailAndOperation(userEmail, operationType, language = null) {
-  const operationCode = utility.getOperationCode()
-
-  await utility.sendEmail(userEmail, operationCode)
-
-  const operationData = language
-    ? { companyName: utility.extractCompanyName(userEmail), userEmail, language }
-    : { email: userEmail }
-
-  await utility.createOperation(operationCode, operationType, operationData)
-
-  return operationCode
-}
-
-/**
- * Create a new operation to get the raw pages of the email domain and send the operation code to the user.
- * @param {string} email - The email address to extrract the domain from.
+ * Begin the process of reading the specified domain's website to gather information about the company.
+ * @param {string} domain - The website domain to gather information.
  */
 exports.getRawPages = async function (req, res) {
-  const email = req.params.email
+  const domain = await extractDomain(req.params.domain.toLowerCase(), { tld: true })
 
-  console.log('Get raw pages of ' + email)
+  console.log('Get raw pages of ' + domain)
 
-  if (isValidEmail.validate(email) && !emailProviders.has(email.split('@')[1])) {
-    try {
-      const operationCode = await handleEmailAndOperation(email, 'getRawPages')
-      return res.json({
-        operationResult: 'The request has been sent. Please check your email for the operation code to insert in the chat.'
-      })
-    } catch (error) {
-      console.log('500')
-      return res.sendStatus(500)
-    }
-  } else {
-    console.log('422')
-    return res.json({
-      operationResult: 'Please check the parameters. The email must be a valid business email address.'
-    })
-  }
-}
+  utility.createLog('createOperation', 'businessImpact', {
+    domain
+  })
 
-/**
- * Start the scansion of an ip address and return the result.
- * @param {string} ip - The ip address to scan.
- */
-exports.scanIP = async function (req, res) {
-  const ip = req.params.ip
-
-  console.log('Scan IP ' + ip)
-
-  if (isValidIP(ip)) {
-    const url = `${config.ip_feed}/cyb/scanIP/${ip}`
+  if (isValidDomain(domain)) {
+    const url = `${config.ip_feed}/cyb/getRawPages/${domain}`
     const method = 'get'
     const headers = {
       'Content-Type': 'application/json',
@@ -112,40 +54,82 @@ exports.scanIP = async function (req, res) {
 
     try {
       const responseData = await makeAxiosRequest(url, method, headers)
-      return res.json(responseData)
+      return res.json(utility.cutString(responseData.rawPages))
     } catch (error) {
-      console.log('500')
-      return res.sendStatus(500)
+      console.log(error.message)
+      res.sendStatus(500)
     }
   } else {
-    console.log('400')
-    return res.sendStatus(400)
+    res.sendStatus(400)
+  }
+}
+
+/**
+ * Start the scansion of an ip address and return the result.
+ * @param {string} ip - The ip address to scan.
+ */
+exports.scanIP = async function (req, res) {
+  const paresedInput = IpAddressType.safeParse(req.params.ip)
+  if (!paresedInput) {
+    return res.status(400).json({
+      msg: 'Invalid Ip Address'
+    })
+  }
+
+  const ip = paresedInput.data.ip
+
+  console.log('Scan IP ' + ip)
+
+  utility.createLog('createOperation', 'scanIP', {
+    ip
+  })
+
+  const url = `${config.ip_feed}/cyb/scanIP/${ip}`
+  const method = 'get'
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+  }
+
+  try {
+    const responseData = await makeAxiosRequest(url, method, headers)
+    return res.json(responseData)
+  } catch (error) {
+    console.log('500')
+    return res.sendStatus(500)
   }
 }
 
 /**
  * Create an operation to scan a company external surface and send the operation code to the user.
  * @param {string} userEmail - The email address of the user.
- * @param {string} language - The language of the report.
  */
 exports.scanCompany = async function (req, res) {
-  const userEmail = req.query.userEmail
-  const language = req.query.language
+  const userEmail = req.query.userEmail.toLowerCase()
 
-  console.log('Scan company ' + userEmail + ' ' + language)
+  console.log('Scan company ' + userEmail)
 
-  if (userEmail && language && validateParameters(userEmail, language)) {
-    try {
-      const operationCode = await handleEmailAndOperation(userEmail, 'scanCompany', language)
-      return res.json({
-        operationResult: 'The request has been sent. Please check your email for the operation code to insert in the chat.'
-      })
-    } catch (error) {
-      console.log('500')
-      return res.sendStatus(500)
-    }
+  utility.createLog('createOperation', 'scanCompany', {
+    email: userEmail
+  })
+
+  if (userEmail && isValidEmail.validate(userEmail) && !emailProviders.has(userEmail.split('@')[1])) {
+    const operationCode = utility.getOperationCode()
+
+    await utility.sendEmail(userEmail, operationCode)
+
+    await utility.createOperation(operationCode, 'scanCompany', {
+      companyName: utility.extractCompanyName(userEmail),
+      userEmail
+    })
+
+    return res.json({
+      operationResult: 'The request has been sent. Please check your email for the operation code to insert in the chat.'
+    })
   } else {
-    console.log('400')
-    return res.sendStatus(400)
+    console.log('422')
+    return res.json({
+      operationResult: 'Please check the parameters. The email must be a valid business email address.'
+    })
   }
 }
