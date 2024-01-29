@@ -1,6 +1,20 @@
 # CybGPT API
+<p>
+  <img alt="Static Badge" src="https://img.shields.io/badge/code%20style-standardJS-blue?logo=javascript&logoColor=white">
+  <img alt="Static Badge" src="https://img.shields.io/badge/licence-GPL3.0-blue">
+</p>
 
-This project is the API for CybGPT, created by Coinnect SA. CybGPT is a powerful AI system designed for various cybersecurity tasks. With this API, CybGPT can interact with server to perform actions such as scanning, retrieving statistics, checking for exfiltrated credentials, and more.
+
+
+CybGPT, a pioneering project by Coinnect SA, is at the forefront of integrating OpenAI's advanced GPT technology with the complex landscape of cybersecurity. This AI-driven plugin is not just a repository of information but a dynamic, evolving assistant tailored for both cybersecurity professionals and enthusiasts. By leveraging the cutting-edge capabilities of GPT, CybGPT stands out as a versatile and adaptive tool, designed to grow with each interaction and stay abreast of the rapidly changing cyber threat environment. CybGPT's strength lies in its ability to simplify and explain complex security concepts, making it an invaluable resource for users at all levels of expertise. Coinnect SA's development of the CybGPT API marks a significant advancement in its functionality. The API allows CybGPT to interact directly with servers, enabling it to perform a wide range of critical cybersecurity tasks. These include, but are not limited to, system scanning, real-time retrieval of security statistics, and detection of exfiltrated credentials. 
+
+## Project Goals
+
+Our mission is to build an AI assistant that not only responds to queries but also anticipates the needs of its users, offering:
+- Proactive threat detection and analysis
+- Simplified explanations of complex security issues
+- Customizable tools for risk assessment and mitigation
+- An open-source hub for Cyber Security AI innovation
 
 ## Installation
 
@@ -24,8 +38,26 @@ MongoDB: This project requires MongoDB to run.
   module.exports = config;
 ```
 
+- You must create a user in api_users collection on DB
+```json
+  {
+    "name": "Test",
+    "api_key": "Your_test_api_key"
+  }
+```
+Use your api-key in the custom header X-API-KEY when making API requests
+
 - npm install
 - npm start
+
+## Example function
+To use the sample function in the config.js file, a valid [VirusTotal](https://www.virustotal.com/) key must be added. 
+```json
+  {
+    "virustotal_api_key": "Your API key"
+  }
+```
+The function can be invoked by making a GET request to the local address /api/v1/communicatingFilesExample/example.com
 
 ## Contributing
 

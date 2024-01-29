@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const config = require('../config/config.js')
 const ApiUserSchema = require('./api_user')
 const cybOperationSchema = require('./cyb_operation.js')
+const cybLogSchema = require('./cyb_log.js')
 
 const mongoConnectionType = process.env.MONGO_CONNECTION_TYPE || config.mongo_connection_type
 const ipDb = process.env.IP_DB || config.ip_db
@@ -33,9 +34,11 @@ db.on('disconnected', console.error.bind(console, 'connection lost:'))
 
 const ApiUser = mongoose.model('Api_User', ApiUserSchema(mongoose))
 const CybOperation = mongoose.model('Cyb_Operation', cybOperationSchema(mongoose))
+const CybLog = mongoose.model('Cyb_Log', cybLogSchema(mongoose))
 
 module.exports = {
   mongoose,
   ApiUser,
-  CybOperation
+  CybOperation,
+  CybLog
 }

@@ -1,5 +1,4 @@
-const isValidEmail = require('email-validator')
-
+const { EmailType } = require('../types/zodTypes.js')
 const utility = require('../utility/utility.js')
 
 /**
@@ -8,21 +7,27 @@ const utility = require('../utility/utility.js')
  */
 
 exports.checkEmailCredentials = async function (req, res) {
-  const email = req.params.email
+  const paresedInput = EmailType.safeParse(req.params.email)
+  if (!paresedInput) {
+    return res.status(400).json({
+      msg: 'email type is not valid'
+    })
+  }
+  const email = paresedInput.data.email
 
   console.log('Check email credentials of ' + email)
 
-  if (isValidEmail.validate(email)) {
-    const operationCode = utility.getOperationCode()
+  utility.createLog('createOperation', 'checkEmailCredentials', {
+    email
+  })
 
-    await utility.sendEmail(email, operationCode)
+  const operationCode = utility.getOperationCode()
 
-    await utility.createOperation(operationCode, 'checkEmailCredentials', {
-      email
-    })
+  await utility.sendEmail(email, operationCode)
 
-    return res.sendStatus(200)
-  } else {
-    res.sendStatus(400)
-  }
+  await utility.createOperation(operationCode, 'checkEmailCredentials', {
+    email
+  })
+
+  return res.sendStatus(200)
 }

@@ -2,7 +2,7 @@ const axios = require('axios')
 const generator = require('generate-password')
 
 const config = require('../config/config.js')
-const { CybOperation } = require('../models/mongodb')
+const { CybOperation, CybLog } = require('../models/mongodb')
 
 exports.cutString = function cutString (inputString) {
   let cuttedString = inputString
@@ -51,4 +51,13 @@ exports.extractCompanyName = function extractCompanyName (email) {
   let name = email.split('@')[1]
   name = name.substring(0, name.lastIndexOf('.'))
   return name.charAt(0).toUpperCase() + name.slice(1)
+}
+
+exports.createLog = function createLog (type, operation, params) {
+  CybLog.create({
+    type,
+    operation,
+    params,
+    createdAt: new Date()
+  })
 }

@@ -9,7 +9,7 @@
   "paths": {
     "/checkEmailCredentials/{email}": {
       "get": {
-        "description": "Request a check on a email address for stolen credential. A operation code will be sent on the user email to start the scansion.",
+        "description": "Request a check on a email address for stolen credential in the last year. A operation code will be sent on the user email to start the scansion.",
         "summary": "Request a check on a email address for stolen credential",
         "operationId": "checkEmailCredentials",
         "parameters": [
@@ -65,9 +65,6 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/rawPagesResponse"
-                    },
-                    {
                       "$ref": "#/components/schemas/checkEmailCredentialsResponse"
                     },
                     {
@@ -87,21 +84,21 @@
         }
       }
     },
-    "/getBusinessImpact/{email}": {
+    "/getBusinessImpact/{domain}": {
       "get": {
-        "description": "Request to write the business impact on a company if it is attacked by a cyber attack. A operation code will be sent on the user email to start the scansion.",
+        "description": "Request to write the business impact on a company if it is attacked by a cyber attack. The result is a raw text extracted from the company website where find information to write the business impact.",
         "summary": "Request to write the business impact on a company if it is attacked by a cyber attack.",
         "operationId": "getBusinessImpact",
         "parameters": [
           {
-            "name": "email",
+            "name": "domain",
             "in": "path",
             "required": true,
-            "description": "The user email address. The domain is used to get the company domain. The email must be valid and a business email address, not gmail, outlook or other generic email providers. A operation code will be sent on this email.",
+            "description": "The domain of the company. The domain must be a valid domain.",
             "schema": {
               "type": "string"
             },
-            "example": "user@example.com"
+            "example": "example.com"
           }
         ],
         "responses": {
@@ -112,9 +109,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "operationResult": {
+                    "rawPages": {
                       "type": "string",
-                      "description": "A description for the user about the operation result. Inform the user about the result."
+                      "description": "Raw text extracted from a company's website to be used for writing the business impact."
                     }
                   }
                 }
@@ -122,7 +119,7 @@
             }
           },
           "400": {
-            "description": "The email must be a valid email address. The email must be a business email address, not gmail, outlook or other generic email providers."
+            "description": "The domain must be a valid domain address for example company.com"
           },
           "500": {
             "description": "Internal server error"
@@ -464,15 +461,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "language",
-            "in": "query",
-            "required": true,
-            "description": "The user must insert the language for the report. Trasform the language in ISO 639-1.",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -507,15 +495,6 @@
   },
   "components": {
     "schemas": {
-      "rawPagesResponse": {
-        "type": "object",
-        "properties": {
-          "rawPages": {
-            "type": "string",
-            "description": "A raw text extracted from company website where find information to write the business impact."
-          }
-        }
-      },
       "checkEmailCredentialsResponse": {
         "type": "array",
         "items": {
