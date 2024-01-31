@@ -84,7 +84,7 @@ exports.getRansomwareStats = async function (req, res) {
   } = req.query
 
   try {
-    const response = await axios.post(`${config.ip_feed}/cyb/getRansomwareStats`, {
+    const response = await axios.post(`${config.ip_manager}/cyb/getRansomwareStats`, {
       countryCode,
       revenue,
       employees,
