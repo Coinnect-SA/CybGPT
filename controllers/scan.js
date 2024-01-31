@@ -82,7 +82,7 @@ exports.scanIP = async function (req, res) {
     ip
   })
 
-  const url = `${config.ip_manager}/cyb/scanIP/${ip}`
+  const url = `${config.ip_feed}/cyb/scanIP/${ip}`
   const method = 'get'
   const headers = {
     'Content-Type': 'application/json',
