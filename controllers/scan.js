@@ -45,7 +45,7 @@ exports.getRawPages = async function (req, res) {
   })
 
   if (isValidDomain(domain)) {
-    const url = `${config.ip_feed}/cyb/getRawPages/${domain}`
+    const url = `${config.ip_manager}/cyb/getRawPages/${domain}`
     const method = 'get'
     const headers = {
       'Content-Type': 'application/json',
