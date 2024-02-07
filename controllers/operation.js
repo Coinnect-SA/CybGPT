@@ -26,7 +26,7 @@ exports.doOperation = async function (req, res) {
         case 'checkEmailCredentials':
           console.log('checkEmailCredentials')
           response = await axios({
-            url: `${config.ip_feed}/cyb/checkEmailCredentials/${operation.params.email}`,
+            url: `${config.ip_manager}/cyb/checkEmailCredentials/${operation.params.email}`,
             method: 'get',
             headers: {
               'Content-Type': 'application/json',
