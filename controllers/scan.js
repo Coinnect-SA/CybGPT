@@ -25,7 +25,7 @@ async function makeAxiosRequest (url, method, headers) {
     const response = await axios({ url, method, headers })
     return response.data
   } catch (error) {
-    console.log(error)
+    console.log(error.message)
     // Re-throw the error for handling at a higher level
     throw error
   }
