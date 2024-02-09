@@ -93,8 +93,7 @@ exports.scanIP = async function (req, res) {
     const responseData = await makeAxiosRequest(url, method, headers)
     return res.json(responseData)
   } catch (error) {
-    console.log('500')
-    return res.sendStatus(500)
+    return res.sendStatus(error.response?.status || 500)
   }
 }
 
