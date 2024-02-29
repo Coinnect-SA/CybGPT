@@ -39,7 +39,7 @@ exports.doOperation = async function (req, res) {
         case 'scanCompany':
           console.log('scanCompany')
           response = await axios({
-            url: `${config.ip_feed}/cyb/scanCompany`,
+            url: `${config.ip_manager}/cyb/scanCompany`,
             method: 'post',
             headers: {
               'Content-Type': 'application/json',
