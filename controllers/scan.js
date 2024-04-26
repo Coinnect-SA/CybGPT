@@ -20,7 +20,7 @@ const { IpAddressType } = require('../types/zodTypes.js')
  * @returns {Promise} Promise - A promise that resolves to the data returned from the Axios request.
  * @throws {Error} error - An error object thrown in case of an unsuccessful Axios request.
  */
-async function makeAxiosRequest (url, method, headers) {
+async function makeAxiosRequest(url, method, headers) {
   try {
     const response = await axios({ url, method, headers })
     return response.data
@@ -93,7 +93,12 @@ exports.scanIP = async function (req, res) {
     const responseData = await makeAxiosRequest(url, method, headers)
     return res.json(responseData)
   } catch (error) {
-    return res.sendStatus(error.response?.status || 500)
+    if (error.response?.status === 404) {
+      res.json({
+        message: 'Unfortunately, we were unable to find any results for the IP address you provided.'
+      })
+    } else
+      return res.sendStatus(error.response?.status || 500)
   }
 }
 
