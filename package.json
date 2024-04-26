@@ -8,24 +8,21 @@
   },
   "dependencies": {
     "aws4": "1.12.0",
-    "axios": "1.6.2",
+    "axios": "1.6.8",
     "connect-mongo": "^5.1.0",
     "dayjs": "1.11.10",
     "email-providers": "^2.0.1",
     "email-validator": "^2.0.4",
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "extract-domain": "^4.1.5",
     "generate-password": "^1.7.1",
     "helmet": "7.1.0",
     "is-my-ip-valid": "^1.0.1",
     "is-valid-domain": "^0.1.6",
-    "mongoose": "8.0.3",
+    "mongoose": "8.3.2",
     "passport": "^0.7.0",
     "passport-headerapikey": "^1.2.2",
-    "zod": "^3.22.4"
-  },
-  "devDependencies": {
-    "standard": "17.1.0"
+    "zod": "^3.23.4"
   },
   "optionalDependencies": {
     "psl": "^1.9.0"
