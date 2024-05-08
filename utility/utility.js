@@ -23,14 +23,13 @@ exports.getOperationCode = function getOperationCode () {
 
 exports.sendEmail = async function sendEmail (email, operationCode) {
   await axios({
-    url: `${config.ip_feed}/email/send`,
+    url: `${config.ip_manager}/email/cybOperation`,
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json'
     },
     data: {
-      action: 'cyb-operation',
       email,
       operationCode
     }
