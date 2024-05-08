@@ -14,7 +14,7 @@ const options = {
   maxPoolSize: 500
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && !process.env.USER_DB_MONGOOSE) {
   uri = uri + ipDb + '/' + nameDb
   options.authSource = '$external'
   options.authMechanism = 'MONGODB-AWS'
