@@ -1,4 +1,5 @@
 const axios = require('axios')
+const dayjs = require('dayjs')
 
 const config = require('../config/config.js')
 const { CybOperation } = require('../models/mongodb')
@@ -15,7 +16,10 @@ exports.doOperation = async function (req, res) {
 
   const operation = await CybOperation.findOne({
     code: operationCode,
-    done: false
+    done: false,
+    createdAt: {
+      $gte: dayjs().subtract(3, 'day').toDate()
+    }
   })
 
   if (operation) {
