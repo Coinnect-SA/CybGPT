@@ -1,4 +1,4 @@
-const axios = require('axios')
+const apiClient = require('../utility/apiClient')
 const isValidEmail = require('email-validator')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
@@ -7,22 +7,20 @@ const emailProviders = new Set(require('email-providers/all.json'))
 const extractDomain = require('extract-domain')
 const isValidDomain = require('is-valid-domain')
 
-const config = require('../config/config.js')
 const utility = require('../utility/utility.js')
 const { IpAddressType } = require('../types/zodTypes.js')
 
 /**
- * Handles the process of making an Axios request to a specified URL with the given method and headers,
+ * Handles the process of making an Axios request to a specified URL with the given method,
  * while incorporating error handling.
  * @param {string} url - The URL to make the Axios request to.
  * @param {string} method - The HTTP method for the request (e.g., 'GET', 'POST').
- * @param {Object} headers - The headers to be included in the request.
  * @returns {Promise} Promise - A promise that resolves to the data returned from the Axios request.
  * @throws {Error} error - An error object thrown in case of an unsuccessful Axios request.
  */
-async function makeAxiosRequest(url, method, headers) {
+async function makeAxiosRequest(path, method) {
   try {
-    const response = await axios({ url, method, headers })
+    const response = await apiClient({ url: path, method })
     return response.data
   } catch (error) {
     console.log(error.message)
@@ -45,15 +43,10 @@ exports.getRawPages = async function (req, res) {
   })
 
   if (isValidDomain(domain)) {
-    const url = `${config.ip_manager}/cyb/getRawPages/${domain}`
+    const url = `/cyb/getRawPages/${domain}`
     const method = 'get'
-    const headers = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    }
-
     try {
-      const responseData = await makeAxiosRequest(url, method, headers)
+      const responseData = await makeAxiosRequest(url, method)
       return res.json(utility.cutString(responseData.rawPages))
     } catch (error) {
       console.log(error.message)
@@ -82,15 +75,10 @@ exports.scanIP = async function (req, res) {
     ip
   })
 
-  const url = `${config.ip_manager}/cyb/scanIP/${ip}`
+  const url = `/cyb/scanIP/${ip}`
   const method = 'get'
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json'
-  }
-
   try {
-    const responseData = await makeAxiosRequest(url, method, headers)
+    const responseData = await makeAxiosRequest(url, method)
     return res.json(responseData)
   } catch (error) {
     if (error.response?.status === 404) {

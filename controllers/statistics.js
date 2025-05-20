@@ -1,9 +1,8 @@
-const axios = require('axios')
+const apiClient = require('../utility/apiClient')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 
-const config = require('../config/config.js')
 const utility = require('../utility/utility.js')
 
 /**
@@ -84,7 +83,7 @@ exports.getRansomwareStats = async function (req, res) {
   } = req.query
 
   try {
-    const response = await axios.post(`${config.ip_manager}/cyb/getRansomwareStats`, {
+    const response = await apiClient.post('/cyb/getRansomwareStats', {
       countryCode,
       revenue,
       employees,
@@ -92,11 +91,6 @@ exports.getRansomwareStats = async function (req, res) {
       startDate,
       endDate,
       naicsCode: correctNaicsCode
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      }
     })
 
     // Respond with the fetched data
