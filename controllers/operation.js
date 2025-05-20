@@ -1,7 +1,5 @@
-const axios = require('axios')
+const apiClient = require('../utility/apiClient')
 const dayjs = require('dayjs')
-
-const config = require('../config/config.js')
 const { CybOperation } = require('../models/mongodb')
 
 /**
@@ -29,34 +27,15 @@ exports.doOperation = async function (req, res) {
       switch (operation.type) {
         case 'checkEmailCredentials':
           console.log('checkEmailCredentials')
-          response = await axios({
-            url: `${config.ip_manager}/cyb/checkEmailCredentials/${operation.params.email}`,
-            method: 'get',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json'
-            }
-          })
-
-          response = response.data
+          ({ data: response } = await apiClient.get(`/cyb/checkEmailCredentials/${operation.params.email}`))
           break
         case 'scanCompany':
           console.log('scanCompany')
-          response = await axios({
-            url: `${config.ip_manager}/cyb/scanCompany`,
-            method: 'post',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json'
-            },
-            data: {
-              mainDomain: operation.params.userEmail.split('@')[1],
-              companyName: operation.params.companyName,
-              userEmail: operation.params.userEmail
-            }
-          })
-
-          response = response.data
+          ({ data: response } = await apiClient.post('/cyb/scanCompany', {
+            mainDomain: operation.params.userEmail.split('@')[1],
+            companyName: operation.params.companyName,
+            userEmail: operation.params.userEmail
+          }))
           break
       }
 
